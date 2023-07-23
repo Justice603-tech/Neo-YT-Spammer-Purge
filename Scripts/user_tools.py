@@ -4,16 +4,19 @@ from Scripts.shared_imports import *
 import Scripts.auth as auth
 import Scripts.validation as validation
 import Scripts.utils as utils
-
+import rich
+from rich.console import Console
+from rich.tabel import Table
+console = Console()
 ################################ USER TOOLS MENU ###########################################
 def user_tools_menu(config):
-  print(f"\n\n-------------------- {F.LIGHTGREEN_EX}Helpful Tools{S.R} --------------------")
-  print(f"      1. Get Channel ID from Video URL")
-  print("")
+  console.print("\n\n-----------------------[bold green] Helpful Tools [/bold green]--------------------------")
+  console.print("      [01]: Get Channel ID from Video URL")
+  console.print("")
   
   validMode:bool = False
   while not validMode:
-    toolChoice = input("Choice: ")
+    toolChoice = console.input("Choice")
 
     # Check if user wants to go back
     if toolChoice == "x":
@@ -34,15 +37,15 @@ def user_tools_menu(config):
         return "MainMenu"
     
     else:
-      print(f"{F.LIGHTRED_EX}Invalid Choice! Must be a number from the selections above.\n{S.R}")
+      print()
       if len(validChoices) == 1:
-        print(f"(Note: For now there is currently only one option available, so enter \"1\".)\n")
+        console.print("[[bold yellow]WARNING[/bold yellow]]: (Note: For now there is currently only one option available, so enter 1")
 
 
 ################################ VIDEO URL TO CHANNEL ID ###########################################
 def video_to_channel_id():
   print(f"\n\n-------------------- Video URL to Channel ID --------------------")
-  print(f"{F.YELLOW}How To Use:{S.R} Enter a video URL and this tool will return the channel ID of the uploader.")
+  print(f"How To Use:{S.R} Enter a video URL and this tool will return the channel ID of the uploader.")
   print("")
   
   validChoice = False
@@ -64,10 +67,16 @@ def video_to_channel_id():
       channelID = videoInfo[4]
       channelTitle = videoInfo[5]
 
-      print("\nResults:")
-      print(f"  - {F.BLUE}Video Title{S.R}: {videoTitle}")
-      print(f"  - {F.BLUE}Channel Name{S.R}: {channelTitle}")
-      print(f"  - {F.BLUE}Channel ID{S.R}: {B.YELLOW}{F.BLACK} {channelID} {S.R}")
+      table = Table(title="Results")
+      table.add_column("Video ID", justify="right", style="cyan", no_wrap=True)
+      table.add_column("Video Title", style="magenta")
+      table.add_column("Comment Count", style="yellow")
+      table.add_column("Channel ID" , justify="right", style="red")
+      table.add_column("Channel Name")
+
+
+      table.add_row(videoID, videoTitle, commentCount, channelID, channelTitle)
+      
 
       input("\nPress Enter to return to main menu...")
       return "MainMenu"
